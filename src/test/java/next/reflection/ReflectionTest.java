@@ -2,16 +2,17 @@ package next.reflection;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 import next.optional.Student;
 import next.optional.User;
+import next.optional.Users;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static org.assertj.core.api.Assertions.*;
 
 public class ReflectionTest {
     private static final Logger logger = LoggerFactory.getLogger(ReflectionTest.class);
@@ -77,5 +78,24 @@ public class ReflectionTest {
 
         System.out.println("User name: " + student.getName());
         System.out.println("User age: "+ student.getAge());
+    }
+
+    @Test
+    public void createUserInstance() {
+        Class<User> clazz = User.class;
+
+        Arrays.stream(clazz.getDeclaredConstructors()).forEach((constructor -> {
+            try {
+                User user = (User) constructor.newInstance("Suji", 25);
+                System.out.println("User name: " + user.getName());
+                System.out.println("User age: " + user.getAge());
+            } catch (InstantiationException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            } catch (InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+        }));
     }
 }
