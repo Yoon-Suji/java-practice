@@ -1,8 +1,11 @@
 package next.reflection;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 
+import next.optional.Student;
+import next.optional.User;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -51,5 +54,28 @@ public class ReflectionTest {
                 logger.debug("param type : {}", paramType);
             }
         }
+    }
+
+    @Test
+    public void privateFieldAccess() {
+        Class<Student> clazz = Student.class;
+        Student student = new Student();
+
+        try {
+            Field name = clazz.getDeclaredField("name");
+            name.setAccessible(true);
+            name.set(student, "Seung gu");
+
+            Field age = clazz.getDeclaredField("age");
+            age.setAccessible(true);
+            age.set(student, 25);
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+
+        System.out.println("User name: " + student.getName());
+        System.out.println("User age: "+ student.getAge());
     }
 }
